@@ -2,7 +2,6 @@
 
 <html>
 
-
 <head>
 
   <meta charset="utf-8">
@@ -11,17 +10,17 @@
 
 </head>
 
+<body style="text-align:center" class="body">
 
-<body>
-
+  <span class="font"><font size="5">
   <h1>しりとり</h1>
-
+  
   <p id="previousWord"></p>
 
-  <input id="nextWordInput" type="text" />
-
-  <button id="nextWordSendButton">送信</button>
-
+  <input id="nextWordInput" type="text" class="txt"/>
+  
+  <button id="nextWordSendButton" type="submit" class="btn"><span class="font"><font size="4">送信</font></span></button>
+  
 
   <script type="module">
 
@@ -31,16 +30,13 @@
 
       const previousWord = await response.text();
 
-
       const para = document.querySelector("#previousWord");
 
       para.innerText = `前の単語：${previousWord}`;
-
+      
     };
-
-
-    document.querySelector("#nextWordSendButton").onclick = async (event) => {
-
+    document.querySelector("#nextWordInput").onkeydown = async (event) => {
+      if(event.key==='Enter'){
       const nextWord = document.querySelector("#nextWordInput").value;
 
       const response = await fetch("/shiritori", {
@@ -63,15 +59,45 @@
 
       const previousWord = await response.text();
 
+      const para = document.querySelector("#previousWord");
+
+      para.innerText = `前の単語：${previousWord}`;
+
+      };
+    }
+
+    document.querySelector("#nextWordSendButton").onclick = async (event) => {
+      const nextWord = document.querySelector("#nextWordInput").value;
+
+      const response = await fetch("/shiritori", {
+
+        method: "POST",
+        method: "SCORE",
+
+        headers: { "Content-Type": "application/json" },
+
+        body: JSON.stringify({ nextWord })
+
+      });
+
+      if (response.status / 100 !== 2) {
+
+        alert(await response.text());
+
+        return;
+
+      }
+      
+      const previousWord = await response.text();
 
       const para = document.querySelector("#previousWord");
 
       para.innerText = `前の単語：${previousWord}`;
 
-    };
-
+      };
   </script>
-
+  </font>
+  </span>
 </body>
 
 
